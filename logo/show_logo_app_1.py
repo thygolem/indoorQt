@@ -1,3 +1,5 @@
+# https://www.youtube.com/watch?v=2ZGpaRyO-jE
+
 import sys
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets
