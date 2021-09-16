@@ -7,23 +7,38 @@ import pymongo
 from  pymongo import MongoClient
 from config import *
 
-class ESP32(object):
-    
-    def on_connect(client, userdata, flags, rc):
-        #print("rc: " + str(rc))
-        print('USUARIO: (%s)' % client._client_id)
-        #Subscribe to topic
-        client.subscribe('indoor', 0) #client.subscribe('topic', qos)
 
-    #Receive gateway and devices data
-    def on_message(client, userdata, message):
-        esp = message.payload
-        esp_mac, near_mac , rssi = str(esp[45:62]), str(esp[71:88]), int(esp[97:100])
-        esp_mac, near_mac= str(esp_mac[2:]), str(near_mac[2:])
-        espAlias    = "B/F/Z" # ASIGNAR ALIAS EN DB
-        print("\n", "esp_mac ",esp_mac[2:],"\n", "near_mac ",near_mac[2:], "\n", "RRSI ",rssi)
-        collection.insert_one({"esp_mac": esp_mac.lower(), "near_mac": near_mac.lower(), "rssi": rssi})
-        print("guardado en DB")
+    
+def on_connect(client, userdata, flags, rc):
+    #print("rc: " + str(rc))
+    print('USUARIO: (%s)' % client._client_id)
+    #Subscribe to topic
+    client.subscribe('indoor', 0) #client.subscribe('topic', qos)
+#Receive gateway and devices data
+
+def on_message(client, userdata, message):
+    esp = message.payload
+    esp_mac, near_mac , rssi = str(esp[45:62]).lower(), str(esp[71:88]).lower(), int(esp[97:100])
+    esp_mac, near_mac= str(esp_mac[2:-1]), str(near_mac[2:-1])
+    espAlias    = "B/F/Z" # ASIGNAR ALIAS EN DB
+    #_id = ObjectId()
+    #print("\n", "esp_mac ",esp_mac,"\n", "near_mac ",near_mac, "\n", "RRSI ",rssi)
+    
+    objectIdentifier = esp_mac + ', ' + 'fe:24:27:b8:d9:13'
+    #indoor_data = {"_id": objectIdentifier}, {"rssi": rssi}
+    collection_count = collection.count_documents({})
+    print(collection_count)
+    if collection_count == 0:
+        collection.insert_one({"_id": objectIdentifier}, {"rssi": rssi})
+        print('nueva colección')
+    else:
+        collection.update_one({"_id": objectIdentifier}, {'$set':{"rssi": rssi}})
+        print("\n", "esp_mac ",esp_mac,"\n", "near_mac ",near_mac, "\n", "RRSI ",rssi)
+    
+    #indoor_data = {"_id": esp_mac + ', ' + near_mac, "near_mac": near_mac, "rssi": rssi}
+    #collection.insert_one(indoor_data)
+    print("guardado en DB")
+
 
 def main():
     #Mqtt connection

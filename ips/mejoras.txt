@@ -1,0 +1,9 @@
+# Sistema de precisión con Redis - - - usar caché
+    => Se trata de aproximar un mejor cálcuo de la posición (Sin triangulación)
+    haciendo la media de los últimos X valores 
+    que no se van a guardar en mongo porque sólo los vamos a utilizar en Y tiempo.
+
+    MQTT recoje los valores y python actualiza en mongodb usando como ObjectId = esp_mac
+    
+    Python debe usar los últimos Z valores almacenándolos en caché 
+    para calcular la distancia aproximada a la que se encuentra el objeto
