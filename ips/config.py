@@ -14,7 +14,7 @@ collection = db['BLEDATA']
 
 # MQTT config info
 # CLOUDMQTT_HOST = 'suigeneris.ml'
-CLOUDMQTT_HOST = '15.188.22.5'
-CLOUDMQTT_PORT = 1883
-CLOUDMQTT_USER = 'indoor_client'
-CLOUDMQTT_PASS = 'Realtime_1'
+CLOUDMQTT_HOST = 'x'
+CLOUDMQTT_PORT = x
+CLOUDMQTT_USER = 'x'
+CLOUDMQTT_PASS = 'x'
